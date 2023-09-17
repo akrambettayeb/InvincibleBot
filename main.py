@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
+
 import discord
 import os
+from dotenv import load_dotenv
 from discord.ext import commands, tasks
 import random
 import itertools
@@ -15,7 +18,9 @@ def get_prefix(client, message):
 
 status = cycle([discord.Game(name="Catch with Dad"),discord.Activity(type=discord.ActivityType.watching,name="INVINCIBLE")])
 invincibleCounter = 0
-intents = discord.Intents.all()
+intents = discord.Intents.default()
+intents.message_content = True
+intents.messages = True
 client = commands.Bot(command_prefix=get_prefix, case_insensitive=True, intents=intents)
 @client.event
 async def on_ready():
@@ -29,11 +34,14 @@ async def change_status():
 
 @client.event
 async def on_message(message):
+    # TODO: get message_content intent set to true so message.contents won't just be empty string :(      
     global invincibleCounter
     play = False
     botRole = discord.utils.get(message.guild.roles, id=859157866242113618)
-    for word in message.content.lower().split():
+    for word in message.content.lower():
+      print(word)
       if 'invincible' in word or client.user.mentioned_in(message) or botRole in message.role_mentions:
+        await message.channel.send("hello")
         play = True
         invincibleCounter += 1
     switch = {
@@ -50,5 +58,8 @@ async def on_message(message):
       await message.channel.send(file=discord.File(switch.get((invincibleCounter - 1)  % 8, 'No such file')))
     await client.process_commands(message)
 
+load_dotenv()
 
-client.run(os.environ['ODU5MDgwOTMwMzk5ODc5MjI5.YNnfdg.pZnJDDobAFBwvc-8WJOhcrzmhUs'])
+TOKEN = os.getenv("TOKEN")
+print("TOKEN =",TOKEN)
+client.run(TOKEN)
