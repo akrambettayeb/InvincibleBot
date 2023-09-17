@@ -34,14 +34,12 @@ async def change_status():
 
 @client.event
 async def on_message(message):
-    # TODO: get message_content intent set to true so message.contents won't just be empty string :(      
     global invincibleCounter
     play = False
     botRole = discord.utils.get(message.guild.roles, id=859157866242113618)
-    for word in message.content.lower():
+    for word in message.content.lower().split():
       print(word)
       if 'invincible' in word or client.user.mentioned_in(message) or botRole in message.role_mentions:
-        await message.channel.send("hello")
         play = True
         invincibleCounter += 1
     switch = {
