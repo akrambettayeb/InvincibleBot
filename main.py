@@ -54,7 +54,6 @@ async def on_message(message):
     play = False
     botRole = discord.utils.get(message.guild.roles, id=859157866242113618)
     for word in message.content.lower().split():
-        print(word)
         if 'invincible' in word or client.user.mentioned_in(message) or botRole in message.role_mentions:
             play = True
             invincibleCounters[guild_id] += 1
