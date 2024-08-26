@@ -12,6 +12,8 @@ import asyncio
 load_dotenv()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+NUM_EPISODES = 16
+
 
 def get_prefix(client, message):
     s = "mark "
@@ -73,22 +75,17 @@ async def on_message(message):
 
     # Save the updated invincibleCounters to the file
     with open(COUNTER_FILE, "w") as file:
-        json.dump(invincibleCounters, file)
+        json.dump(invincibleCounters, file, indent=4)
 
-    switch = {
-        0: "title_cards/Invincible1.mp4",
-        1: "title_cards/Invincible2.mp4",
-        2: "title_cards/Invincible3.mp4",
-        3: "title_cards/Invincible4.mp4",
-        4: "title_cards/Invincible5.mp4",
-        5: "title_cards/Invincible6.mp4",
-        6: "title_cards/Invincible7.mp4",
-        7: "title_cards/Invincible8.mp4",
-    }
+    switch = {}
+    for i in range(NUM_EPISODES):
+        switch[i] = f"title_cards/Invincible{i+1}.mp4"
     if play:
         await message.channel.send(
             file=discord.File(
-                switch.get((invincibleCounters[guild_id] - 1) % 8, "No such file")
+                switch.get(
+                    (invincibleCounters[guild_id] - 1) % NUM_EPISODES, "No such file"
+                )
             )
         )
     command, user_message = None, None
@@ -97,7 +94,12 @@ async def on_message(message):
             command = message.content.split(" ")[0]
             user_message = message.content.replace(text, "")
 
-    if command == "/invincible" or command == "/invinciblebot" or command == "/mark" or command == "/markbot":
+    if (
+        command == "/invincible"
+        or command == "/invinciblebot"
+        or command == "/mark"
+        or command == "/markbot"
+    ):
         bot_response = chatgpt_response(message=user_message)
         await message.channel.send(bot_response)
     await client.process_commands(message)
