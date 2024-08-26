@@ -75,7 +75,7 @@ async def on_message(message):
 
     # Save the updated invincibleCounters to the file
     with open(COUNTER_FILE, "w") as file:
-        json.dump(invincibleCounters, file)
+        json.dump(invincibleCounters, file, indent=4)
 
     switch = {}
     for i in range(NUM_EPISODES):
