@@ -1,3 +1,4 @@
+activity.log
 .env
 .pythonlibs/
 .cache/
@@ -9,3 +10,4 @@ pyproject.toml.backup
 replit_zip_error_log.txt
 replit.nix
 poetry.lock
+.vscode
